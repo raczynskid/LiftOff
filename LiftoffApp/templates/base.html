@@ -1,0 +1,21 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Liftoff</title>
+</head>
+<body>
+<div>Liftoff: <a href='/'>Home</a> <a href='about'>About</a></div>
+{% if request.user.username != "" %}
+    <div>Logged in as {{ request.user.username }} <a href="logout">Logout</a></div>
+{% else %}
+    <div>Not logged in. <a href="/LiftoffApp/login">Login</a> or <a href="signin">register.</a></div>
+{% endif %}
+<hr>
+{% block content %}{% endblock %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    {% block javascript %}
+    {% endblock javascript %}
+
+</body>

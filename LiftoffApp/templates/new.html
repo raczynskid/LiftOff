@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for lift in lifts %}
+        <input type="checkbox" id={{ lift.type }} name="{{ lift.type }}">
+        <label for="{{ lift.type }}">{{ lift.type }}</label><br>
+    {% endfor %}
+    <input type="text" id="new_type" name="new_type" placeholder="new lift">
+    <input type="number"
+           id="new_weight"
+           name="new_weight"
+           placeholder="starting weight"
+           min=0>
+    <button>Add</button>
+    <br>
+    <button type="submit">Submit</button>
+    <button type="reset">Reset</button>
+{% endblock %}
