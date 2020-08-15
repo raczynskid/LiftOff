@@ -1,14 +1,28 @@
-from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
-from django import forms
+from .forms import FormSessionPlan
 
 
 def new(request):
+    form = FormSessionPlan(request)
+    if request.method == 'POST':
+        existing_lifts = {lift: (get_last_weight(lift, request.user)[0],
+                                 get_set_values_per_last_lift(lift, request.user))
+                          for lift
+                          in request.POST.getlist('choices')}
+        added_lifts = dict(zip(request.POST.getlist('newlift[]'),
+                               request.POST.getlist('startweight[]')))
+        for k,v in added_lifts.items():
+            added_lifts[k] = (v, [0,0,0,0,0])
+
+        added_lifts.update(existing_lifts)
+        data = added_lifts
+        print(data)
     return render(request, "new.html",
-                  {"lifts": get_user_lifts(request)})
+                  {"lifts": get_user_lifts_unique(request),
+                   "form": form})
 
 
 def index(request):

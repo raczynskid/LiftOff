@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for lift in lifts %}
-        <input type="checkbox" id={{ lift.type }} name="{{ lift.type }}">
-        <label for="{{ lift.type }}">{{ lift.type }}</label><br>
-    {% endfor %}
-    <input type="text" id="new_type" name="new_type" placeholder="new lift">
-    <input type="number"
-           id="new_weight"
-           name="new_weight"
-           placeholder="starting weight"
-           min=0>
-    <button>Add</button>
-    <br>
-    <button type="submit">Submit</button>
-    <button type="reset">Reset</button>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <div class="container1">
+            <button class="add_form_field">Add New Lift &nbsp;
+              <span style="font-size:16px; font-weight:bold;">+ </span>
+            </button>
+
+        </div>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+    <script src="../static/new.js"></script>
 {% endblock %}

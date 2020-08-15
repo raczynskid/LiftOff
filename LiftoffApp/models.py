@@ -41,5 +41,17 @@ def get_user_sessions(request):
     return Session.objects.filter(user_id=request.user)
 
 
-def get_user_lifts(request):
-    return Lift.objects.filter(session__user_id=request.user).order_by().values('type').distinct()
+def get_user_lifts_unique(request):
+    return Lift.objects.filter(session__user_id=request.user) \
+        .order_by().values('type').distinct().values_list("type", flat=True)
+
+
+def get_last_weight(type, user):
+    return Lift.objects.filter(session__user_id=user, type=type) \
+        .order_by().values('session__date').values_list('weight').first()
+
+def get_set_values_per_last_lift(type, user):
+    last_session = Lift.objects.filter(session__user_id=user, type=type)\
+        .order_by().values('session__date').values_list('session__date').first()[0]
+    sets = Set.objects.filter(lift__type=type, lift__session__user_id=user, lift__session__date=last_session)
+    return [set.reps for set in sets]
