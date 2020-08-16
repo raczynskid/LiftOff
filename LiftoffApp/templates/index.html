@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<button type="button">
-    <a href="new.html">New session</a>
-</button>
+    <button type="button">
+        <a href="new.html">New session</a>
+    </button>
     <br>
     {% for session in sessions %}
         {{ session.date }} {{ session.user_id }}
         <ul>
-        {% for lift in session.lifts.all %}
-            <li>{{ lift.type }} {{ lift.weight }}kg</li>
-            {% for set in lift.sets.all %}
-                <li style="margin-left:2em">
-                {% if set.reps < 5 %}
-                    <div style="color: red">{{ set.reps }}/5</div>
-                {% else %}
-                    <div style="color: green">{{ set.reps }}/5</div>
+            {% for lift in session.lifts.all %}
+                <li>{{ lift.type }} {{ lift.weight }}kg</li>
+                {% if forloop.parentloop.first %}
+                    <div>====SLIDER HERE====</div>
                 {% endif %}
-                </li>
+                {% for set in lift.sets.all %}
+                    {% if forloop.parentloop.parentloop.first %}
+                        {% if set.reps == 0 %}
+                        {% elif set.reps < 5 %}
+                            <div style="color: red">{{ set.reps }}/5</div>
+                        {% else %}
+                            <div style="color: green">{{ set.reps }}/5</div>
+                        {% endif %}
+                    {% else %}
+                        {% if set.reps < 5 %}
+                            <div style="color: red">{{ set.reps }}/5</div>
+                        {% else %}
+                            <div style="color: green">{{ set.reps }}/5</div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
         </ul>
     {% endfor %}
 {% endblock %}
