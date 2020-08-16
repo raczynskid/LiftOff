@@ -4,7 +4,7 @@ from django.utils.timezone import now
 
 
 class Session(models.Model):
-    date = models.DateField(default=now)
+    date = models.DateField(default=now, unique=True)
     user_id = models.ForeignKey(User, unique=False, on_delete=models.CASCADE)
 
     class Meta:
@@ -50,8 +50,9 @@ def get_last_weight(type, user):
     return Lift.objects.filter(session__user_id=user, type=type) \
         .order_by().values('session__date').values_list('weight').first()
 
+
 def get_set_values_per_last_lift(type, user):
-    last_session = Lift.objects.filter(session__user_id=user, type=type)\
+    last_session = Lift.objects.filter(session__user_id=user, type=type) \
         .order_by().values('session__date').values_list('session__date').first()[0]
     sets = Set.objects.filter(lift__type=type, lift__session__user_id=user, lift__session__date=last_session)
     return [set.reps for set in sets]

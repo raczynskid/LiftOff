@@ -1,4 +1,4 @@
-def is_sets_valid(sets):
+def is_sets_valid(sets) -> None:
     sets_over_five = [set for set in sets if set > 5]
     sets_negative = [set for set in sets if set < 0]
     if sets_over_five or sets_negative:
@@ -6,6 +6,7 @@ def is_sets_valid(sets):
 
 
 def is_passed(sets: list) -> bool:
+    is_sets_valid(sets)
     if sum(sets) < 25:
         return False
     return True

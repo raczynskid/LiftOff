@@ -33,3 +33,17 @@ class TestLogic(unittest.TestCase):
                     'bicep curl': (14.5, [0, 0, 0, 0, 0])}
         actual = calculate_new_weights(self.test_data)
         self.assertEqual(expected, actual)
+
+    def test_new_weights_calculation_negative_reps(self):
+        test_data_invalid = {'cable butterflies': (15, [0, -1, 0, 0, 0]),
+                             'benchpress': (90, [5, 4, 4, 4, 4]),
+                             'row': (60, [5, 5, 5, 5, 5]),
+                             'bicep curl': (12, [5, 5, 5, 5, 5])}
+        self.assertRaises(ValueError, calculate_new_weights, test_data_invalid)
+
+    def test_new_weights_calculation_reps_over_five(self):
+        test_data_invalid = {'cable butterflies': (15, [0, 0, 0, 0, 0]),
+                             'benchpress': (90, [5, 6, 4, 4, 4]),
+                             'row': (60, [5, 5, 5, 5, 5]),
+                             'bicep curl': (12, [5, 5, 5, 5, 5])}
+        self.assertRaises(ValueError, calculate_new_weights, test_data_invalid)

@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
 from .forms import FormSessionPlan
+from django.contrib import messages
+from .static.logic import calculate_new_weights
+from django.db import IntegrityError
 
 
 def new(request):
@@ -14,12 +17,24 @@ def new(request):
                           in request.POST.getlist('choices')}
         added_lifts = dict(zip(request.POST.getlist('newlift[]'),
                                request.POST.getlist('startweight[]')))
-        for k,v in added_lifts.items():
-            added_lifts[k] = (v, [0,0,0,0,0])
+        for k, v in added_lifts.items():
+            added_lifts[k] = (v, [0, 0, 0, 0, 0])
 
         added_lifts.update(existing_lifts)
-        data = added_lifts
+        data = calculate_new_weights(added_lifts)
         print(data)
+        try:
+            new_session = Session.objects.create(user_id=request.user)
+        except IntegrityError:
+            print("error - session exists")
+            raise IntegrityError
+        for key, value in data.items():
+            lift_type = key
+            lift_weight = value[0]
+            new_lift = Lift.objects.create(type=lift_type, weight=lift_weight, session=new_session)
+            for set_number in range(5):
+                Set.objects.create(set_number=set_number + 1, lift=new_lift)
+
     return render(request, "new.html",
                   {"lifts": get_user_lifts_unique(request),
                    "form": form})
